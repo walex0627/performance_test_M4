@@ -2,25 +2,27 @@
 import mysql2 from 'mysql2/promise';
 import dotenv from 'dotenv';
 
+//To load .env variables
+dotenv.config();
 
 //Create connection
 export const pool = mysql2.createPool({
     host : "localhost",
-    database: "Expertsoft",
+    database: "Performance_test_M4",
     user: "root",
-    password: "NuevaContraseña",
+    password: "walteralex0627",
     port: "3306",
+
 })
+//Try connection with database
+// async function trialConnection(){
+//     try{
+//         const connection = await pool.getConnection();
+//         console.log('connection sucessfull')
+//         connection.release()
+//     }catch(error){
+//         console.error('connect error', error.message);
+//     }
+// }
 
-//Probando la conexion con la base de datos
-async function probarConexion(){
-    try{
-        const connection = await pool.getConnection();
-        console.log('conexion exitosa')
-        connection.release()
-    }catch(error){
-        console.error('error al conectar', error.message);
-    }
-}
-
-probarConexion()
+// trialConnection()
