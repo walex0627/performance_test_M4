@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Loan Transactions</title>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-6">
+
+    <h1 class="text-3xl font-bold text-center mb-6 text-blue-600">Transaction Management</h1>
+
+    <!-- Transaction Form -->
+    <form id="transactionForm" class="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto mb-8">
+        <input type="hidden" id="transaction_id">
+
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div>
+                <input type="number" id="user_id_fk" placeholder="ID" required
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <input type="date" id="loan_date"
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <input type="date" id="return_date"
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <select id="status" required
+                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+                    <option value="">Status</option>
+                    <option value="active">Active</option>
+                    <option value="returned">Returned</option>
+                    <option value="late">Late</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white rounded-lg p-2 hover:bg-blue-600 transition">Save</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Filter buttons -->
+    <div class="flex flex-wrap items-center gap-4 mb-6 justify-center">
+        <input type="number" id="search_user_id" placeholder="Search by User ID"
+            class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+        <button onclick="searchTransactionsByUser()"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Search User Transactions
+        </button>
+    </div>
+
+    <!-- Transaction Table -->
+    <div class="overflow-x-auto max-w-6xl mx-auto">
+        <table class="w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead class="bg-blue-500 text-white">
+                <tr>
+                    <th class="py-2 px-4 text-left">Transaction ID</th>
+                    <th class="py-2 px-4 text-left">User</th>
+                    <th class="py-2 px-4 text-left">Book</th>
+                    <th class="py-2 px-4 text-left">Loan Date</th>
+                    <th class="py-2 px-4 text-left">Invoiced amount</th>
+                    <th class="py-2 px-4 text-left">Status</th>
+                    <th class="py-2 px-4 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="transactionsTable" class="divide-y divide-gray-200">
+                <!-- Dynamic data -->
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module" src="./frontend/js/main.js"></script>
+</body>
+</html>
