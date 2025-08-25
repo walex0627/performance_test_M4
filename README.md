@@ -421,13 +421,15 @@ All API requests use the base URL: http://localhost:3000/api/v1
 ### Available Endpoints
 
 | Method | Route | Description |
-| :----- | :-------------------------------------- | :------------------------------------------------ |
+| :----- | :-------------------------------------- | :------------------------------------------------|
 | GET    | /api/v1/transactions                  | Get all transactions                              |
-| GET    | /api/v1/transactions/client/:clientName | Get transactions by client name                   |
+| GET    | /api/v1/transactions/client/:clientName | Get transactions by client name                 |
 | GET    | /api/v1/transactions/:id              | Get a transaction by ID                           |
 | POST   | /api/v1/transactions                  | Create a new transaction                          |
 | PUT    | /api/v1/transactions/:id              | Update a transaction                              |
 | DELETE | /api/v1/transactions/:id              | Delete a transaction                              |
 | GET    | /api/v1/clients/total-paid            | Get total paid by each client                     |
-| GET    | /api/v1/transactions/platform/:platformName | Get transactions by platform                      |
+| GET    | /api/v1/transactions/platform/:platformName | Get transactions by platform                |
 | GET    | /api/v1/bills/pending                 | Get all bills with pending status                 |
+| GET    | /api/v1/bills/pending                 | Get all bills with pending status                 |
+
