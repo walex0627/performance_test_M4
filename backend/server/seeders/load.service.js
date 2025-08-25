@@ -1,6 +1,6 @@
-/*se encarga de cargar los usuarios a la base de datos*/
-import fs from 'fs'; // es la que me permite leer archivos
-import path from 'path'; // esta muestra la ruta actual
+/*responsible for loading users into the database*/
+import fs from 'fs'; // this is what allows me to read files
+import path from 'path'; // this shows the current path
 import csv from 'csv-parser';
 import { pool } from "../connections_db.js"
 
@@ -30,14 +30,14 @@ export async function loadClients() {
                     const [result] = await pool.query(sql, [clients]);
 
                     console.log(`✅ They were inserted ${result.affectedRows} clients.`);
-                    resolve(); // Termina exitosamente
+                    resolve(); // Ends successfully
                 } catch (error) {
-                    console.error('❌ Error al insertar usuarios:', error.message);
+                    console.error('❌ Error inserting users:', error.message);
                     reject(error);
                 }
             })
             .on('error', (err) => {
-                console.error('❌ Error al leer el archivo CSV de usuarios:', err.message);
+                console.error('❌ Error reading user CSV file:', err.message);
                 reject(err);
             });
     });
@@ -48,7 +48,7 @@ export async function loadTransactions() {
     const filePath = path.resolve('backend/server/data/02_transaction.csv');
     const transactions = [];
 
-    // Conversión de fecha CSV -> formato MySQL
+    // CSV date conversion -> MySQL format
     function formatDateForMySQL(dateStr) {
         if (!dateStr || !dateStr.trim()) return null;
         const [day, month, rest] = dateStr.split('/');
@@ -63,7 +63,7 @@ export async function loadTransactions() {
                 transactions.push([
                     rows.transaction_code,
                     formatDateForMySQL(rows.transaction_datetime),
-                    rows.transaction_amount ? Number(rows.transaction_amount) : 0, // monto plano
+                    rows.transaction_amount, 
                     rows.transaction_status,
                     rows.transaction_type,
                     rows.platform_used,
@@ -85,21 +85,19 @@ export async function loadTransactions() {
 
                     const [result] = await pool.query(sql, [transactions]);
 
-                    console.log(`✅ Se insertaron ${result.affectedRows} transacciones.`);
+                    console.log(`✅ They were inserted ${result.affectedRows} transactions.`);
                     resolve();
                 } catch (error) {
-                    console.error('❌ Error al insertar transacciones:', error.message);
+                    console.error('❌ Error inserting transactions:', error.message);
                     reject(error);
                 }
             })
             .on('error', (err) => {
-                console.error('❌ Error al leer el archivo CSV de transacciones:', err.message);
+                console.error('❌ Error reading transaction CSV file:', err.message);
                 reject(err);
             });
     });
 }
-
-
 
 
 //To load bills
@@ -111,9 +109,9 @@ export async function loadBills() {
         fs.createReadStream(filePath)
             .pipe(csv())
             .on("data", (rows) => {
-                // Evitar filas sin bill_code o en blanco
+                // Avoid rows without bill_code or blank
                 if (!rows.bill_code || !rows.bill_code.trim()) {
-                    console.warn("⚠️ Fila ignorada: bill_code vacío");
+                    console.warn("⚠️ Ignored row: empty bill_code");
                     return;
                 }
 
@@ -129,7 +127,7 @@ export async function loadBills() {
             .on('end', async () => {
                 try {
                     if (bills.length === 0) {
-                        console.warn("⚠️ No se encontraron facturas válidas para insertar.");
+                        console.warn("⚠️ No valid bills found to insert.");
                         resolve();
                         return;
                     }
@@ -146,16 +144,17 @@ export async function loadBills() {
 
                     const [result] = await pool.query(sql, [bills]);
 
-                    console.log(`✅ Se insertaron ${result.affectedRows} facturas.`);
+                    console.log(`✅ ${result.affectedRows} bills were inserted.`);
                     resolve();
                 } catch (error) {
-                    console.error('❌ Error al insertar facturas:', error.message);
+                    console.error('❌ Error inserting bills:', error.message);
                     reject(error);
                 }
             })
             .on('error', (err) => {
-                console.error('❌ Error al leer el archivo CSV de facturas:', err.message);
+                console.error('❌ Error reading bills CSV file:', err.message);
                 reject(err);
             });
     });
 }
+

@@ -1,4 +1,5 @@
 -- Create DATABASE Performance_test_M4
+DROP DATABASE Performance_test_M4
 CREATE DATABASE Performance_test_M4;
 USE Performance_test_M4;
 
@@ -8,7 +9,7 @@ CREATE TABLE clients (
     name_client VARCHAR(255) NOT NULL,
     identification VARCHAR(50) UNIQUE NOT NULL,
     address VARCHAR(255),
-    phone VARCHAR(20),
+    phone VARCHAR(50),
     email VARCHAR(255) UNIQUE NOT NULL
 );
 
@@ -18,7 +19,7 @@ CREATE TABLE transactions (
     transaction_code VARCHAR(50) UNIQUE NOT NULL,
     transaction_datetime TIMESTAMP NOT NULL,
     transaction_amount DECIMAL(10, 2) NOT NULL,
-    transaction_status VARCHAR(50) NOT NULL,
+    transaction_status ENUM("Fallida","Completada", "Pendiente"),
     transaction_type VARCHAR(50) NOT NULL,
     platform_used VARCHAR(100),
     client_id_fk INT,
