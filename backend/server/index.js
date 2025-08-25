@@ -18,8 +18,19 @@ app.get(`${api_version}`, async (req, res) => {
     res.send("server online");
 });
 
+// GET all clients
+app.get(`${api_version}/clients`, async (req, res) => {
+    try {
+        const query = `SELECT client_id, name_client FROM clients`;
+        const [rows] = await pool.query(query);
+        res.json(rows);
+    } catch (error) {
+        console.error("Error fetching clients:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 // GET all transactions
-app.get("/api/v1/transactions", async (req, res) => {
+app.get(`${api_version}/transactions`, async (req, res) => {
     try {
         const query = `
             SELECT 
@@ -78,6 +89,13 @@ app.post(`${api_version}/transactions`, async (req, res) => {
             client_id_fk
         } = req.body;
 
+        if (!client_id_fk || !transaction_code || !transaction_amount || !transaction_status || !transaction_type || !platform_used) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        // Format dat for MySql
+        const formattedDatetime = new Date(transaction_datetime).toISOString().slice(0, 19).replace('T', ' ');
+
         const query = `
             INSERT INTO transactions (
                 transaction_code,
@@ -90,9 +108,10 @@ app.post(`${api_version}/transactions`, async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
+
         const [result] = await pool.query(query, [
             transaction_code,
-            transaction_datetime,
+            formattedDatetime, 
             transaction_amount,
             transaction_status,
             transaction_type,
@@ -101,21 +120,20 @@ app.post(`${api_version}/transactions`, async (req, res) => {
         ]);
 
         res.status(201).json({
-            message: "Transaction created",
+            message: "Transaction created successfully",
             transaction_id: result.insertId
         });
 
     } catch (error) {
-        console.log("There is a problem", error.message);
+        console.error("Error creating transaction:", error);
         res.status(500).json({
             status: 'error',
             endpoint: req.originalUrl,
             method: req.method,
-            message: error.message
+            message: "An internal server error occurred"
         });
     }
 });
-
 // PUT update transaction
 app.put(`${api_version}/transactions/:transaction_id`, async (req, res) => {
     try {

@@ -1,4 +1,4 @@
-transaction_id,transaction_code,transaction_datetime,transaction_ammount,transaction_status,transaction_type,platform_used,client_id_fk
+transaction_id,transaction_code,transaction_datetime,transaction_amount,transaction_status,transaction_type,platform_used,client_id_fk
 1,TXN001,01/06/2024 10:00,38940,Pendiente,Pago de Factura,Nequi,1
 2,TXN002,09/07/2024 12:00,75145,Pendiente,Pago de Factura,Daviplata,2
 3,TXN003,13/06/2024 10:00,179217,Fallida,Pago de Factura,Daviplata,3

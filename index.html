@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Loan Transactions</title>
+    <title>Transaction Management</title>
 </head>
 
 <body class="bg-gray-100 min-h-screen p-6">
@@ -14,45 +14,68 @@
 
     <!-- Transaction Form -->
     <form id="transactionForm" class="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto mb-8">
-        <input type="hidden" id="transaction_id">
-
-        <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-                <input type="number" id="user_id_fk" placeholder="ID" required
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <input type="date" id="loan_date"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <input type="date" id="return_date"
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div>
-                <select id="status" required
-                    class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-                    <option value="">Status</option>
-                    <option value="active">Active</option>
-                    <option value="returned">Returned</option>
-                    <option value="late">Late</option>
+                <label for="client_name" class="block text-sm font-medium text-gray-700">Client Name</label>
+                <select id="client_name"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select a client</option>
+                    <!-- Las opciones de clientes se añadirán dinámicamente aquí -->
                 </select>
             </div>
             <div>
-                <button type="submit"
-                    class="w-full bg-blue-500 text-white rounded-lg p-2 hover:bg-blue-600 transition">Save</button>
+                <label for="transaction_code" class="block text-sm font-medium text-gray-700">Transaction Code</label>
+                <input type="text" id="transaction_code" placeholder="Transaction Code"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
             </div>
+            <div>
+                <label for="transaction_amount" class="block text-sm font-medium text-gray-700">Transaction Amount</label>
+                <input type="text" id="transaction_amount" placeholder="Transaction Amount"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="transaction_datetime" class="block text-sm font-medium text-gray-700">Date</label>
+                <input type="date" id="transaction_datetime"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="transaction_status" class="block text-sm font-medium text-gray-700">Status</label>
+                <select id="transaction_status"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+                    <option value="">Status</option>
+                    <option value="Completada">Completada</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Fallida">Fallida</option>
+                </select>
+            </div>
+            <div>
+                <label for="transaction_type" class="block text-sm font-medium text-gray-700">Transaction Type</label>
+                <input type="text" id="transaction_type" placeholder="Transaction Type"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="platform_used" class="block text-sm font-medium text-gray-700">Platform Used</label>
+                <input type="text" id="platform_used" placeholder="Platform Used"
+                    class="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
+            </div>
+        </div>
+        <div class="mt-4 flex justify-end gap-2">
+            <button type="button" id="clearButton" onclick="clearForm()" hidden
+                class="bg-gray-500 text-white rounded-lg p-2 px-4 hover:bg-gray-600 transition">Clear</button>
+            <button type="submit"
+                class="bg-blue-500 text-white rounded-lg p-2 px-4 hover:bg-blue-600 transition">Nuevo</button>
         </div>
     </form>
 
+
     <!-- Filter buttons -->
     <div class="flex flex-wrap items-center gap-4 mb-6 justify-center">
-        <input type="number" id="search_user_id" placeholder="Search by User ID"
+        <input type="text" id="search_name" placeholder="Search by name"
             class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-        <button onclick="searchTransactionsByUser()"
+        <button onclick="searchTransactionsByName()"
             class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-            Search User Transactions
+            Search name transaction
         </button>
     </div>
 
@@ -63,19 +86,21 @@
                 <tr>
                     <th class="py-2 px-4 text-left">Transaction ID</th>
                     <th class="py-2 px-4 text-left">User</th>
-                    <th class="py-2 px-4 text-left">Book</th>
+                    <th class="py-2 px-4 text-left">Transaction Code</th>
                     <th class="py-2 px-4 text-left">Loan Date</th>
-                    <th class="py-2 px-4 text-left">Invoiced amount</th>
+                    <th class="py-2 px-4 text-left">Transaction Amount</th>
                     <th class="py-2 px-4 text-left">Status</th>
                     <th class="py-2 px-4 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody id="transactionsTable" class="divide-y divide-gray-200">
-                <!-- Dynamic data -->
+                <!-- Dynamic data will be inserted here -->
             </tbody>
         </table>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="./frontend/js/main.js"></script>
 </body>
+
 </html>
